@@ -33,11 +33,7 @@ public class PaxMethod {
 			if (i != 0) {
 				methodString += ", ";
 			}
-			String methodParam = PlatformTypeConverterUtil.getJavaType(param.getType());
-			if (param.getModifier() != null && !param.getModifier().isEmpty()) {
-				methodString += PlatformTypeConverterUtil.getJavaModifier(param.getModifier()) + " ";
-			}
-			methodString += methodParam + " " + param.getName();
+			methodString += param.getJavaString();
 			i++;
 		}
 		methodString += ");";
@@ -48,14 +44,10 @@ public class PaxMethod {
 		String methodString = "- (" + PlatformTypeConverterUtil.getObjcType(returnType) + ")" + name;
 		int i = 0;
 		for(PaxParam param : params) {
-			String methodParam = PlatformTypeConverterUtil.getObjcType(param.getType());
 			if (i != 0) {
 				methodString += " with" + Character.toUpperCase(param.getName().charAt(0)) + param.getName().substring(1);
 			}
-			if (param.getModifier() != null && !param.getModifier().isEmpty()) {
-				methodParam += " " + PlatformTypeConverterUtil.getObjcModifier(param.getModifier());
-			}
-			methodString += ":(" + methodParam + ")" + param.getName();
+			methodString += ":" + param.getObjcString();
 			i++;
 		}
 		methodString += ";";

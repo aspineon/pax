@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ca.mestevens.java.pax.utils.PlatformTypeConverterUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,16 @@ public class PaxParam {
 	private String name;
 	private String description;
 	private String modifier;
+	
+	public String getJavaString() {
+		String javaString = "";
+		String methodParam = PlatformTypeConverterUtil.getJavaType(type);
+		if (modifier != null && !modifier.isEmpty()) {
+			javaString += PlatformTypeConverterUtil.getJavaModifier(modifier) + " ";
+		}
+		javaString += methodParam + " " + name;
+		return javaString;
+	}
 	
 	public String getJavaDocumentation() {
 		if (description == null || description.equals("")) {
@@ -41,6 +52,14 @@ public class PaxParam {
 			i++;
 		}
 		return documentation;
+	}
+	
+	public String getObjcString() {
+		String methodParam = PlatformTypeConverterUtil.getObjcType(type);
+		if (modifier != null && !modifier.isEmpty()) {
+			methodParam += " " + PlatformTypeConverterUtil.getObjcModifier(modifier);
+		}
+		return "(" + methodParam + ")" + name;
 	}
 	
 }
