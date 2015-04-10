@@ -101,6 +101,10 @@ public class PaxMethod {
 		return documentation;
 	}
 	
+	public String getObjcDocumentation() {
+		return getJavaDocumentation().replaceAll("\t", "");
+	}
+	
 	private List<String> splitString(String string) {
 		final int wordsPerLine = 15;
 		List<String> splitDescription = new ArrayList<String>(Arrays.asList(string.split(" ")));

@@ -45,9 +45,18 @@ public class PaxClass {
 	}
 	
 	public String toObjcString() {
-		String classString = "@protocol " + objcMetadata.getClassName() + " <NSObject>\n\n";
+		String classString = "#import <Foundation/Foundation.h>\n\n";
+		String documentation = getObjcDocumentation();
+		if (documentation != null) {
+			classString += documentation;
+		}
+		classString += "@protocol " + objcMetadata.getClassName() + " <NSObject>\n\n";
 		classString += "@required\n\n";
 		for(PaxMethod method : methods) {
+			String methodDocumentation = method.getObjcDocumentation();
+			if (methodDocumentation != null && !methodDocumentation.isEmpty()) {
+				classString += methodDocumentation;
+			}
 			classString += method.toObjcString() + "\n\n";
 		}
 		classString += "@end";
@@ -55,7 +64,6 @@ public class PaxClass {
 	}
 	
 	public String getJavaImports() {
-		
 		Set<String> javaImports = new HashSet<String>();
 		for (PaxMethod method : methods) {
 			javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(method.getReturnType(), javaMetadata.getNamespace()));
@@ -95,6 +103,10 @@ public class PaxClass {
 		}
 		documentation += " */\n";
 		return documentation;
+	}
+	
+	public String getObjcDocumentation() {
+		return getJavaDocumentation();
 	}
 	
 }
