@@ -1,7 +1,11 @@
 package ca.mestevens.java.pax.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ca.mestevens.java.pax.models.PaxType;
 import ca.mestevens.java.pax.models.PaxTypeModifier;
@@ -26,18 +30,40 @@ public class PlatformTypeConverterUtil {
 	public static String getJavaType(String type) {
 		if (javaClassMap.containsKey(type)) {
 			return javaClassMap.get(type).getClassName();
+		} else if (type.startsWith("map<") && type.endsWith(">")) {
+			String innerString = type.substring(4);
+			innerString = innerString.substring(0, innerString.length() - 1);
+			List<String> mapSides = splitInnerMapStringIntoTwo(innerString);
+			return "Map<" + getJavaType(mapSides.get(0)) + ", " + getJavaType(mapSides.get(1)) + ">";
+		} else if (type.startsWith("list<") && type.endsWith(">")) {
+			String innerType = type.substring(5);
+			innerType = innerType.substring(0, innerType.length() - 1);
+			return "List<" + getJavaType(innerType) + ">";
 		}
 		return type;
 	}
 	
-	public static String getJavaImportForType(String type, String currentNamespace) {
+	public static Set<String> getJavaImportForType(String type, String currentNamespace) {
+		Set<String> returnSet = new HashSet<String>();
 		if (javaClassMap.containsKey(type)) {
 			PaxType paxType = javaClassMap.get(type);
 			if (paxType.getNamespace() != null && !currentNamespace.equals(paxType.getNamespace())) {
-				return paxType.getNamespace() + "." + paxType.getClassName();
+				returnSet.add("import " + paxType.getNamespace() + "." + paxType.getClassName() + ";");
 			}
+		} else if (type.startsWith("map<") && type.endsWith(">")) {
+			String innerString = type.substring(4);
+			innerString = innerString.substring(0, innerString.length() - 1);
+			List<String> mapSides = splitInnerMapStringIntoTwo(innerString);
+			returnSet.add("import java.util.Map;");
+			returnSet.addAll(getJavaImportForType(mapSides.get(0), currentNamespace));
+			returnSet.addAll(getJavaImportForType(mapSides.get(1), currentNamespace));
+		} else if (type.startsWith("list<") && type.endsWith(">")) {
+			String innerType = type.substring(5);
+			innerType = innerType.substring(0, innerType.length() - 1);
+			returnSet.add("import java.util.List;");
+			returnSet.addAll(getJavaImportForType(innerType, currentNamespace));
 		}
-		return null;
+		return returnSet;
 	}
 	
 	public static String getObjcType(String type) {
@@ -50,6 +76,10 @@ public class PlatformTypeConverterUtil {
 				returnType = "id<" + returnType + ">";
 			}
 			return returnType;
+		} else if (type.startsWith("map<") && type.endsWith(">")) {
+			return "NSDictionary*";
+		} else if (type.startsWith("list<") && type.endsWith(">")) {
+			return "NSArray*";
 		}
 		return type;
 	}
@@ -59,6 +89,30 @@ public class PlatformTypeConverterUtil {
 			return objcClassMap.get(type).getClassName() + ".h";
 		}
 		return null;
+	}
+	
+	public static List<String> splitInnerMapStringIntoTwo(String innerString) {
+		String leftSide = "";
+		String rightSide = "";
+		int innerCount = 0;
+		boolean addRightSide = false;
+		for(char s : innerString.toCharArray()) {
+			if (addRightSide) {
+				rightSide += s;
+			} else if (s == '<') {
+				innerCount++;
+			} else if (s == '>') {
+				innerCount--;
+			} else if (s == ',' && innerCount == 0) {
+				addRightSide = true;
+			} else {
+				leftSide += s;
+			}
+		}
+		List<String> returnList = new ArrayList<String>();
+		returnList.add(leftSide.trim());
+		returnList.add(rightSide.trim());
+		return returnList;
 	}
 	
 }
