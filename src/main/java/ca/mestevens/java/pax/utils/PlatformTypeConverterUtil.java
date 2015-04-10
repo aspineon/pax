@@ -115,4 +115,15 @@ public class PlatformTypeConverterUtil {
 		return returnList;
 	}
 	
+	public static String getJavaModifier(String modifier) {
+		if (modifier.equals("const")) {
+			return "final";
+		}
+		return modifier;
+	}
+	
+	public static String getObjcModifier(String modifier) {
+		return modifier;
+	}
+	
 }

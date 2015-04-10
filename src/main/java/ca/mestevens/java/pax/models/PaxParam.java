@@ -16,6 +16,7 @@ public class PaxParam {
 	private String type;
 	private String name;
 	private String description;
+	private String modifier;
 	
 	public String getJavaDocumentation() {
 		if (description == null || description.equals("")) {
