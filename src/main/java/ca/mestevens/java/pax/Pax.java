@@ -101,7 +101,7 @@ public class Pax {
 	}
 	
 	public static void main(String [] args) throws IOException {
-		Pax pax = new Pax("testJson.json");
+		Pax pax = new Pax("../testJson.json");
 		pax.generateApi();
 	}
 	
