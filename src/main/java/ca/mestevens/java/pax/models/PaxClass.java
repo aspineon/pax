@@ -65,10 +65,14 @@ public class PaxClass {
 	
 	public String getJavaImports() {
 		Set<String> javaImports = new HashSet<String>();
-		for (PaxMethod method : methods) {
-			javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(method.getReturnType(), javaMetadata.getNamespace()));
-			for (PaxParam param : method.getParams()) {
-				javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(param.getType(), javaMetadata.getNamespace()));
+		if (methods != null) {
+			for (PaxMethod method : methods) {
+				javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(method.getReturnType(), javaMetadata.getNamespace()));
+				if (method.getParams() != null) {
+					for (PaxParam param : method.getParams()) {
+						javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(param.getType(), javaMetadata.getNamespace()));
+					}
+				}
 			}
 		}
 		String javaImportString = "";

@@ -1,7 +1,6 @@
 package ca.mestevens.java.pax.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ca.mestevens.java.pax.utils.PlatformTypeConverterUtil;
@@ -29,12 +28,14 @@ public class PaxMethod {
 	public String toJavaString() {
 		String methodString = "public " + PlatformTypeConverterUtil.getJavaType(returnType) + " " + name + "(";
 		int i = 0;
-		for(PaxParam param : params) {
-			if (i != 0) {
-				methodString += ", ";
+		if (params != null) {
+			for(PaxParam param : params) {
+				if (i != 0) {
+					methodString += ", ";
+				}
+				methodString += param.toJavaString();
+				i++;
 			}
-			methodString += param.getJavaString();
-			i++;
 		}
 		methodString += ");";
 		return methodString;
@@ -43,12 +44,14 @@ public class PaxMethod {
 	public String toObjcString() {
 		String methodString = "- (" + PlatformTypeConverterUtil.getObjcType(returnType) + ")" + name;
 		int i = 0;
-		for(PaxParam param : params) {
-			if (i != 0) {
-				methodString += " with" + Character.toUpperCase(param.getName().charAt(0)) + param.getName().substring(1);
+		if (params != null) {
+			for(PaxParam param : params) {
+				if (i != 0) {
+					methodString += " with" + Character.toUpperCase(param.getName().charAt(0)) + param.getName().substring(1);
+				}
+				methodString += ":" + param.toObjcString();
+				i++;
 			}
-			methodString += ":" + param.getObjcString();
-			i++;
 		}
 		methodString += ";";
 		return methodString;
@@ -71,19 +74,23 @@ public class PaxMethod {
 		documentation += "\t/**\n";
 		
 		if (description != null && !description.isEmpty()) {
-			List<String> splitDescription = splitString(description);
+			List<String> splitDescription = PlatformTypeConverterUtil.splitString(description);
 			for (String line : splitDescription) {
 				documentation += "\t * " + line + "\n";
 			}
 		}
-		for(PaxParam param : params) {
-			String paramDocumentation = param.getJavaDocumentation();
-			if (paramDocumentation != null && !paramDocumentation.isEmpty()) {
-				documentation += "\t" + param.getJavaDocumentation();
+		if (params != null) {
+			for(PaxParam param : params) {
+				List<String> paramDocumentation = param.getJavaDocumentation();
+				if (paramDocumentation != null && !paramDocumentation.isEmpty()) {
+					for (String paramDoc : paramDocumentation) {
+						documentation += "\t" + paramDoc + "\n";
+					}
+				}
 			}
 		}
 		if (returnDescription != null && !returnDescription.isEmpty()) {
-			List<String> returnSplit = splitString(returnDescription);
+			List<String> returnSplit = PlatformTypeConverterUtil.splitString(returnDescription);
 			boolean firstLine = true;
 			for (String line : returnSplit) {
 				if (firstLine) {
@@ -103,27 +110,6 @@ public class PaxMethod {
 		return getJavaDocumentation().replaceAll("\t", "");
 	}
 	
-	private List<String> splitString(String string) {
-		final int wordsPerLine = 15;
-		List<String> splitDescription = new ArrayList<String>(Arrays.asList(string.split(" ")));
-		List<String> returnDescriptions = new ArrayList<String>();
-		int i = 0;
-		String line = "";
-		for (String word : splitDescription) {
-			if (i % wordsPerLine == 0) {
-				line = "";
-			}
-			line += word;
-			if (i % wordsPerLine == wordsPerLine - 1) {
-				returnDescriptions.add(line);
-			} else if (i < splitDescription.size() - 1){
-				line += " ";
-			} else {
-				returnDescriptions.add(line);
-			}
-			i++;
-		}
-		return returnDescriptions;
-	}
+	
 	
 }

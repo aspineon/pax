@@ -1,7 +1,6 @@
 package ca.mestevens.java.pax.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ca.mestevens.java.pax.utils.PlatformTypeConverterUtil;
@@ -19,7 +18,7 @@ public class PaxParam {
 	private String description;
 	private String modifier;
 	
-	public String getJavaString() {
+	public String toJavaString() {
 		String javaString = "";
 		String methodParam = PlatformTypeConverterUtil.getJavaType(type);
 		if (modifier != null && !modifier.isEmpty()) {
@@ -29,32 +28,21 @@ public class PaxParam {
 		return javaString;
 	}
 	
-	public String getJavaDocumentation() {
+	public List<String> getJavaDocumentation() {
 		if (description == null || description.equals("")) {
-			return null;
+			return new ArrayList<String>();
 		}
-		String documentation = " * @param " + name + " ";
-		final int wordsPerLine = 15;
-		List<String> descriptionStrings = new ArrayList<String>(Arrays.asList(description.split(" ")));
+		String documentation = "@param " + name + " " + description;
+		List<String> returnSplit = PlatformTypeConverterUtil.splitString(documentation);
 		int i = 0;
-		for (String descriptionString : descriptionStrings) {
-			if (i % wordsPerLine == 0 && i != 0) {
-				documentation += " * ";
-			}
-			documentation += descriptionString;
-			if (i % wordsPerLine == wordsPerLine - 1) {
-				documentation += "\n";
-			} else if (i < descriptionStrings.size() - 1){
-				documentation += " ";
-			} else {
-				documentation += "\n";
-			}
+		for(String line : returnSplit) {
+			returnSplit.set(i, " * " + line);
 			i++;
 		}
-		return documentation;
+		return returnSplit;
 	}
 	
-	public String getObjcString() {
+	public String toObjcString() {
 		String methodParam = PlatformTypeConverterUtil.getObjcType(type);
 		if (modifier != null && !modifier.isEmpty()) {
 			methodParam += " " + PlatformTypeConverterUtil.getObjcModifier(modifier);
