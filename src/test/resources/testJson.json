@@ -81,7 +81,7 @@
                 },
                 {
                     "name": "getValueForHeader",
-                    "return": "String",
+                    "return": "string",
                     "returnDescription": "value for the header field",
                     "params": [
                         {

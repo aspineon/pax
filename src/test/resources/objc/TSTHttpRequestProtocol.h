@@ -30,7 +30,7 @@
  * @param header name of the header field
  * @return value for the header field
  */
-- (String)getValueForHeader:(NSString*)header;
+- (NSString*)getValueForHeader:(NSString*)header;
 
 /**
  * Set the body of the request, defaulting to UTF-8 charset
