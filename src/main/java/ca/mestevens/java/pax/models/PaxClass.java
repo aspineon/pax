@@ -2,7 +2,9 @@ package ca.mestevens.java.pax.models;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ca.mestevens.java.pax.utils.PlatformTypeConverterUtil;
 import lombok.AllArgsConstructor;
@@ -43,9 +45,18 @@ public class PaxClass {
 	}
 	
 	public String toObjcString() {
-		String classString = "@protocol " + objcMetadata.getClassName() + " <NSObject>\n\n";
+		String classString = "#import <Foundation/Foundation.h>\n\n";
+		String documentation = getObjcDocumentation();
+		if (documentation != null) {
+			classString += documentation;
+		}
+		classString += "@protocol " + objcMetadata.getClassName() + " <NSObject>\n\n";
 		classString += "@required\n\n";
 		for(PaxMethod method : methods) {
+			String methodDocumentation = method.getObjcDocumentation();
+			if (methodDocumentation != null && !methodDocumentation.isEmpty()) {
+				classString += methodDocumentation;
+			}
 			classString += method.toObjcString() + "\n\n";
 		}
 		classString += "@end";
@@ -53,26 +64,22 @@ public class PaxClass {
 	}
 	
 	public String getJavaImports() {
-		String javaImports = "";
-		for(PaxMethod method : methods) {
-			String returnNamespace = PlatformTypeConverterUtil.getJavaImportForType(method.getReturnType(), javaMetadata.getNamespace());
-			if (returnNamespace != null) {
-				String importString = "import " + returnNamespace + ";";
-				if (!javaImports.contains(importString)) {
-					javaImports += importString + "\n";
-				}
-			}
-			for (PaxParam param : method.getParams()) {
-				String namespace = PlatformTypeConverterUtil.getJavaImportForType(param.getType(), javaMetadata.getNamespace());
-				if (namespace != null) {
-					String paramImportString = "import " + namespace + ";";
-					if (!javaImports.contains(paramImportString)) {
-						javaImports += paramImportString + "\n";
+		Set<String> javaImports = new HashSet<String>();
+		if (methods != null) {
+			for (PaxMethod method : methods) {
+				javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(method.getReturnType(), javaMetadata.getNamespace()));
+				if (method.getParams() != null) {
+					for (PaxParam param : method.getParams()) {
+						javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(param.getType(), javaMetadata.getNamespace()));
 					}
 				}
 			}
 		}
-		return javaImports;
+		String javaImportString = "";
+		for(String importString : javaImports) {
+			javaImportString += importString + "\n";
+		}
+		return javaImportString;
 	}
 	
 	public String getJavaDocumentation() {
@@ -100,6 +107,10 @@ public class PaxClass {
 		}
 		documentation += " */\n";
 		return documentation;
+	}
+	
+	public String getObjcDocumentation() {
+		return getJavaDocumentation();
 	}
 	
 }

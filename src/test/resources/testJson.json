@@ -1,0 +1,356 @@
+{
+    "javaOutputFolder": "target",
+    "objcOutputFolder": "target",
+    "classes": [
+        {
+            "className": "HttpService",
+            "javaMetadata": {
+                "namespace": "com.test.http.services",
+                "className": "HttpService",
+                "outputFolder": "src/main/java/com/test/http/services"
+            },
+            "objcMetadata": {
+                "className": "TSTHttpServiceProtocol",
+                "outputFolder": "test"
+            },
+            "description": "Service interface for creating HTTP Requests.",
+            "methods": [
+                {
+                    "name": "getResource",
+                    "return": "HttpRequest",
+                    "returnDescription": "A new HttpRequest object that can be further customized and executed.",
+                    "description": "Returns a new HttpRequest for the specified URL resource.",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "url",
+                            "description": "A string representing the URL resource for this request",
+                            "modifier": "const"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "className": "HttpRequest",
+            "javaMetadata": {
+                "namespace": "com.test.http.models",
+                "className": "HttpRequest",
+                "outputFolder": "src/main/java/com/test/http/models"
+            },
+            "objcMetadata": {
+                "className": "TSTHttpRequestProtocol",
+                "outputFolder": "test"
+            },
+            "description": "Interface for defining the HttpRequest helper class API.",
+            "methods": [
+                {
+                    "name": "setResource",
+                    "return": "HttpRequest",
+                    "returnDescription": "the HttpRequest being altered",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "url",
+                            "description": "resource endpoint to send the request to"
+                        }
+                    ]
+                },
+                {
+                    "name": "getResource",
+                    "return": "string",
+                    "returnDescription": "the resource endpoint this request is being sent to"
+                },
+                {
+                    "name": "setHeader",
+                    "return": "HttpRequest",
+                    "returnDescription": "the HttpRequest being altered",
+                    "description": "Set a header field and value on this request",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "header",
+                            "description": "name of the header field"
+                        },
+                        {
+                            "type": "string",
+                            "name": "value",
+                            "description": "value for the header field"
+                        }
+                    ]
+                },
+                {
+                    "name": "getValueForHeader",
+                    "return": "String",
+                    "returnDescription": "value for the header field",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "header",
+                            "description": "name of the header field"
+                        }
+                    ]
+                },
+                {
+                    "name": "setBody",
+                    "return": "HttpRequest",
+                    "returnDescription": "the HttpRequest being altered",
+                    "description": "Set the body of the request, defaulting to UTF-8 charset",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "body"
+                        }
+                    ]
+                },
+                {
+                    "name": "setBody",
+                    "return": "HttpRequest",
+                    "returnDescription": "the HttpRequest being altered",
+                    "description": "Set the body of the request with a specified charset",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "body",
+                            "description": "body of the request"
+                        },
+                        {
+                            "type": "string",
+                            "name": "charset",
+                            "description": "charset the body is encoded in"
+                        }
+                    ]
+                },
+                {
+                    "name": "setJsonBody",
+                    "return": "HttpRequest",
+                    "returnDescription": "the HttpRequest being altered",
+                    "description": "Set the body of the request with a valid json string, defaulting to UTF-8 charset",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "jsonBody",
+                            "description": "body of the request, as a valid json string"
+                        }
+                    ]
+                },
+                {
+                    "name": "setJsonBody",
+                    "return": "HttpRequest",
+                    "returnDescription": "the HttpRequest being altered",
+                    "description": "Set the body of the request with a valid json string and a specified charset",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "jsonBody",
+                            "description": "body of the request, as a valid json string"
+                        },
+                        {
+                            "type": "string",
+                            "name": "charset",
+                            "description": "charset the body is encoded in"
+                        }
+                    ]
+                },
+                {
+                    "name": "get",
+                    "return": "HttpResponse",
+                    "returnDescription": "Response object populated with execution results",
+                    "description": "Execute a GET request with object as constructed"
+                },
+                {
+                    "name": "put",
+                    "return": "HttpResponse",
+                    "returnDescription": "Response object populated with execution results",
+                    "description": "Execute a PUT request with object as constructed"
+                },
+                {
+                    "name": "post",
+                    "return": "HttpResponse",
+                    "returnDescription": "Response object populated with execution results",
+                    "description": "Execute a POST request with object as constructed"
+                },
+                {
+                    "name": "delete",
+                    "return": "HttpResponse",
+                    "returnDescription": "Response object populated with execution results",
+                    "description": "Execute a DELETE request with object as constructed"
+                },
+                {
+                    "name": "getAsync",
+                    "return": "void",
+                    "description": "Execute a GET request with object as constructed, on a background worker thread",
+                    "params": [
+                        {
+                            "type": "HttpRequestListener",
+                            "name": "requestListener",
+                            "description": "optional callback when request is complete",
+                            "modifier": "const"
+                        }
+                    ]
+                },
+                {
+                    "name": "putAsync",
+                    "return": "void",
+                    "description": "Execute a PUT request with object as constructed, on a background worker thread",
+                    "params": [
+                        {
+                            "type": "HttpRequestListener",
+                            "name": "requestListener",
+                            "description": "optional callback when request is complete",
+                            "modifier": "const"
+                        }
+                    ]
+                },
+                {
+                    "name": "postAsync",
+                    "return": "void",
+                    "description": "Execute a POST request with object as constructed, on a background worker thread",
+                    "params": [
+                        {
+                            "type": "HttpRequestListener",
+                            "name": "requestListener",
+                            "description": "optional callback when request is complete",
+                            "modifier": "const"
+                        }
+                    ]
+                },
+                {
+                    "name": "deleteAsync",
+                    "return": "void",
+                    "description": "Execute a DELETE request with object as constructed, on a background worker thread",
+                    "params": [
+                        {
+                            "type": "HttpRequestListener",
+                            "name": "requestListener",
+                            "description": "optional callback when request is complete",
+                            "modifier": "const"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "className": "HttpResponse",
+            "javaMetadata": {
+                "namespace": "com.test.http.models",
+                "className": "HttpResponse",
+                "outputFolder": "src/main/java/com/test/http/models"
+            },
+            "objcMetadata": {
+                "className": "TSTHttpResponseProtocol",
+                "outputFolder": "test"
+            },
+            "description": "Interface for defining the HttpResponse helper class API.",
+            "methods": [
+                {
+                    "name": "getUrl",
+                    "return": "string",
+                    "returnDescription": "The url for this HTTP response."
+                },
+                {
+                    "name": "setUrl",
+                    "return": "void",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "url",
+                            "description": "Sets the response code for this HTTP response."
+                        }
+                    ]
+                },
+                {
+                    "name": "getCode",
+                    "return": "int",
+                    "returnDescription": "The response code for this HTTP response."
+                },
+                {
+                    "name": "setCode",
+                    "return": "void",
+                    "params": [
+                        {
+                            "type": "int",
+                            "name": "code",
+                            "description": "Sets the response code for this HTTP response."
+                        }
+                    ]
+                },
+                {
+                    "name": "getMessage",
+                    "return": "string",
+                    "returnDescription": "The response message for this HTTP response, usually populated when there is an error."
+                },
+                {
+                    "name": "setMessage",
+                    "return": "void",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "message",
+                            "description": "Sets the response message for this HTTP response, usually for errors."
+                        }
+                    ]
+                },
+                {
+                    "name": "getBody",
+                    "return": "string",
+                    "returnDescription": "The response body for this HTTP response."
+                },
+                {
+                    "name": "setBody",
+                    "return": "void",
+                    "params": [
+                        {
+                            "type": "string",
+                            "name": "body",
+                            "description": "Sets the response body for this HTTP response."
+                        }
+                    ]
+                },
+                {
+                    "name": "getHeaders",
+                    "return": "map<string, list<string>>",
+                    "returnDescription": "The headers for this HTTP response."
+                },
+                {
+                    "name": "setHeaders",
+                    "return": "void",
+                    "params": [
+                        {
+                            "type": "map<string, list<string>>",
+                            "name": "headers",
+                            "description": "Sets the headers for this HTTP response."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "className": "HttpRequestListener",
+            "javaMetadata": {
+                "namespace": "com.test.http.models",
+                "className": "HttpRequestListener",
+                "outputFolder": "src/main/java/com/test/http/models"
+            },
+            "objcMetadata": {
+                "className": "TSTHttpRequestListener",
+                "outputFolder": "test"
+            },
+            "description": "Callback interface specific to asynchronous http requests.",
+            "methods": [
+                {
+                    "name": "onComplete",
+                    "return": "void",
+                    "description": "Provides a means to hand back control after a request has completed, on the worker background thread.",
+                    "params": [
+                        {
+                            "type": "HttpResponse",
+                            "name": "response",
+                            "description": "result of the request that was executed."
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

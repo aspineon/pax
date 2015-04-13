@@ -31,7 +31,6 @@ public class Pax {
 	public void generateApi() throws IOException {
 		getCustomClassNames();
 		generateJavaApi();
-		System.out.println("");
 		generateObjcApi();
 	}
 	
@@ -75,7 +74,6 @@ public class Pax {
 			} finally {
 				output.close();
 			}
-			System.out.println(paxClass.toJavaString());
 		}
 	}
 	
@@ -96,13 +94,7 @@ public class Pax {
 			} finally {
 				output.close();
 			}
-			System.out.println(paxClass.toObjcString());
 		}
-	}
-	
-	public static void main(String [] args) throws IOException {
-		Pax pax = new Pax("testJson.json");
-		pax.generateApi();
 	}
 	
 }
