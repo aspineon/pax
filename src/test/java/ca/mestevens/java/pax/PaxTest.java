@@ -38,7 +38,8 @@ public class PaxTest {
 	
 	@Test
 	public void testGenerateApis() throws IOException {
-		pax.generateApi();
+		//Generate Objc Files
+		pax.generateObjcApi();
 		//Check Objc files
 		File objcRequestListenerFile = new File("target/test/TSTHttpRequestListener.h");
 		assertTrue(objcRequestListenerFile.exists());
@@ -52,6 +53,8 @@ public class PaxTest {
 		File objcServiceProtocolFile = new File("target/test/TSTHttpServiceProtocol.h");
 		assertTrue(objcServiceProtocolFile.exists());
 		assertEquals(Files.readAllBytes(Paths.get(objcServiceProtocolFile.getAbsolutePath())), Files.readAllBytes(Paths.get(objcServiceProtocolPath)));
+		//Generate Java Files
+		pax.generateJavaApi();
 		//Check Java files
 		File javaRequestListenerFile = new File("target/src/main/java/com/test/http/models/HttpRequestListener.java");
 		assertTrue(javaRequestListenerFile.exists());

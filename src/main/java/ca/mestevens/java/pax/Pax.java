@@ -26,15 +26,10 @@ public class Pax {
 	public Pax(String apiFileLocation) throws IOException {
 		byte[] encodedBytes = Files.readAllBytes(Paths.get(apiFileLocation));
 		paxProject = new Gson().fromJson(new String(encodedBytes, Charset.defaultCharset()), PaxProject.class);
-	}
-	
-	public void generateApi() throws IOException {
 		getCustomClassNames();
-		generateJavaApi();
-		generateObjcApi();
 	}
 	
-	public void getCustomClassNames() {
+	private void getCustomClassNames() {
 		List<PaxClass> classes = paxProject.getClasses();
 		Map<String, PaxType> javaClassMap = new HashMap<String, PaxType>();
 		Map<String, PaxType> objcClassMap = new HashMap<String, PaxType>();
