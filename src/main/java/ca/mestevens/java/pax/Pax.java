@@ -17,19 +17,19 @@ import ca.mestevens.java.pax.models.PaxClass;
 import ca.mestevens.java.pax.models.PaxProject;
 import ca.mestevens.java.pax.models.PaxType;
 import ca.mestevens.java.pax.models.PaxTypeModifier;
-import ca.mestevens.java.pax.utils.PlatformTypeConverterUtil;
+import ca.mestevens.java.pax.utils.StringUtils;
 
 public class Pax {
 
 	private PaxProject paxProject;
+	private final PaxClassWriter javaPaxClassWriter;
+	private final PaxClassWriter objcPaxClassWriter;
 	
 	public Pax(String apiFileLocation) throws IOException {
 		byte[] encodedBytes = Files.readAllBytes(Paths.get(apiFileLocation));
 		paxProject = new Gson().fromJson(new String(encodedBytes, Charset.defaultCharset()), PaxProject.class);
-		getCustomClassNames();
-	}
-	
-	private void getCustomClassNames() {
+		
+		//Get custom classes
 		List<PaxClass> classes = paxProject.getClasses();
 		Map<String, PaxType> javaClassMap = new HashMap<String, PaxType>();
 		Map<String, PaxType> objcClassMap = new HashMap<String, PaxType>();
@@ -48,8 +48,8 @@ public class Pax {
 				objcClassMap.put(paxClass.getClassName(), type);
 			}
 		}
-		PlatformTypeConverterUtil.javaClassMap.putAll(javaClassMap);
-		PlatformTypeConverterUtil.objcClassMap.putAll(objcClassMap);
+		this.javaPaxClassWriter = new JavaPaxClassWriter(new StringUtils(15), javaClassMap);
+		this.objcPaxClassWriter = new ObjcPaxClassWriter();
 	}
 	
 	public void generateJavaApi() throws IOException {
@@ -62,7 +62,11 @@ public class Pax {
 			try {
 				file.createNewFile();
 				output = new BufferedWriter(new FileWriter(file));
-				output.write(paxClass.toJavaString());
+				List<String> paxClassAsStrings = javaPaxClassWriter.writePaxClass(paxClass);
+				for (String lineString : paxClassAsStrings) {
+					output.write(lineString);
+					output.newLine();
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -73,7 +77,7 @@ public class Pax {
 	}
 	
 	public void generateObjcApi() throws IOException {
-		List<PaxClass> classes = paxProject.getClasses();
+		/*List<PaxClass> classes = paxProject.getClasses();
 		for (PaxClass paxClass : classes) {
 			File directory = new File(paxProject.getObjcOutputFolder() + "/" + paxClass.getObjcMetadata().getOutputFolder() + "/");
 			directory.mkdirs();
@@ -89,7 +93,7 @@ public class Pax {
 			} finally {
 				output.close();
 			}
-		}
+		}*/
 	}
 	
 }

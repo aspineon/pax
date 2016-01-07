@@ -2,8 +2,10 @@ package ca.mestevens.java.pax;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -38,7 +40,7 @@ public class PaxTest {
 	
 	@Test
 	public void testGenerateApis() throws IOException {
-		//Generate Objc Files
+		/*//Generate Objc Files
 		pax.generateObjcApi();
 		//Check Objc files
 		File objcRequestListenerFile = new File("target/test/TSTHttpRequestListener.h");
@@ -52,7 +54,7 @@ public class PaxTest {
 		assertEquals(Files.readAllBytes(Paths.get(objcResponseProtocolFile.getAbsolutePath())), Files.readAllBytes(Paths.get(objcResponseProtocolPath)));
 		File objcServiceProtocolFile = new File("target/test/TSTHttpServiceProtocol.h");
 		assertTrue(objcServiceProtocolFile.exists());
-		assertEquals(Files.readAllBytes(Paths.get(objcServiceProtocolFile.getAbsolutePath())), Files.readAllBytes(Paths.get(objcServiceProtocolPath)));
+		assertEquals(Files.readAllBytes(Paths.get(objcServiceProtocolFile.getAbsolutePath())), Files.readAllBytes(Paths.get(objcServiceProtocolPath)));*/
 		//Generate Java Files
 		pax.generateJavaApi();
 		//Check Java files

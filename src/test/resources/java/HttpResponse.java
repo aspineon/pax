@@ -1,7 +1,7 @@
 package com.test.http.models;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for defining the HttpResponse helper class API.

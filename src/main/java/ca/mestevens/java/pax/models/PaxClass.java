@@ -1,116 +1,35 @@
 package ca.mestevens.java.pax.models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import ca.mestevens.java.pax.utils.PlatformTypeConverterUtil;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import ca.mestevens.java.pax.validation.groups.JavaGroup;
+import ca.mestevens.java.pax.validation.groups.ObjcGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Wither;
 
 @Data
+@Wither
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaxClass {
 
+	@NotNull
+	@Size(min = 1)
 	private String className;
+	@Valid
+	@NotNull(groups = JavaGroup.class)
 	private PaxLanguageMetadata javaMetadata;
+	//@Valid
+	@NotNull(groups = ObjcGroup.class)
 	private PaxLanguageMetadata objcMetadata;
 	private String description;
+	@Valid
 	private List<PaxMethod> methods;
-	
-	public String toJavaString() {
-		String classString = "package " + javaMetadata.getNamespace() + ";\n\n";
-		String importString = getJavaImports();
-		if (!importString.isEmpty()) {
-			classString += importString + "\n";
-		}
-		String documentation = getJavaDocumentation();
-		if (documentation != null) {
-			classString += documentation;
-		}
-		classString += "public interface " + javaMetadata.getClassName() + " {\n\n";
-		for(PaxMethod method : methods) {
-			String methodDocumentation = method.getJavaDocumentation();
-			if (methodDocumentation != null && !methodDocumentation.isEmpty()) {
-				classString += methodDocumentation;
-			}
-			classString += "\t" + method.toJavaString() + "\n\n";
-		}
-		classString += "}";
-		return classString;
-	}
-	
-	public String toObjcString() {
-		String classString = "#import <Foundation/Foundation.h>\n\n";
-		String documentation = getObjcDocumentation();
-		if (documentation != null) {
-			classString += documentation;
-		}
-		classString += "@protocol " + objcMetadata.getClassName() + " <NSObject>\n\n";
-		classString += "@required\n\n";
-		for(PaxMethod method : methods) {
-			String methodDocumentation = method.getObjcDocumentation();
-			if (methodDocumentation != null && !methodDocumentation.isEmpty()) {
-				classString += methodDocumentation;
-			}
-			classString += method.toObjcString() + "\n\n";
-		}
-		classString += "@end";
-		return classString;
-	}
-	
-	public String getJavaImports() {
-		Set<String> javaImports = new HashSet<String>();
-		if (methods != null) {
-			for (PaxMethod method : methods) {
-				javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(method.getReturnType(), javaMetadata.getNamespace()));
-				if (method.getParams() != null) {
-					for (PaxParam param : method.getParams()) {
-						javaImports.addAll(PlatformTypeConverterUtil.getJavaImportForType(param.getType(), javaMetadata.getNamespace()));
-					}
-				}
-			}
-		}
-		String javaImportString = "";
-		for(String importString : javaImports) {
-			javaImportString += importString + "\n";
-		}
-		return javaImportString;
-	}
-	
-	public String getJavaDocumentation() {
-		if (description == null || description.equals("")) {
-			return null;
-		}
-		String documentation = "";
-		documentation += "/**\n";
-		final int wordsPerLine = 15;
-		List<String> descriptionStrings = new ArrayList<String>(Arrays.asList(description.split(" ")));
-		int i = 0;
-		for (String descriptionString : descriptionStrings) {
-			if (i % wordsPerLine == 0) {
-				documentation += " * ";
-			}
-			documentation += descriptionString;
-			if (i % wordsPerLine == wordsPerLine - 1) {
-				documentation += "\n";
-			} else if (i < descriptionStrings.size() - 1){
-				documentation += " ";
-			} else {
-				documentation += "\n";
-			}
-			i++;
-		}
-		documentation += " */\n";
-		return documentation;
-	}
-	
-	public String getObjcDocumentation() {
-		return getJavaDocumentation();
-	}
 	
 }
